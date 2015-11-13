@@ -53,8 +53,15 @@ final class Image implements ImageInterface
     public function __destruct()
     {
         if (null !== $this->gmagick && $this->gmagick instanceof \Gmagick) {
-            $this->gmagick->clear();
+            $instance = $this->gmagick->current();
             $this->gmagick->destroy();
+
+            if ($instance) {
+                $instance->clear();
+                $instance->destroy();
+                unset($instance);
+            }
+            unset($this->gmagick);
         }
     }
 
